@@ -242,8 +242,7 @@ export default function ExpressiveWritingApp() {
       );
     });
 
-    return { today, text: lines.join("
-") };
+    return { today, text: lines.join(("\n") };
   };
 
   const escapeHtml = (value) => {
