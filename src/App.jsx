@@ -226,7 +226,7 @@ export default function ExpressiveWritingApp() {
         "4일 표현적 글쓰기 기록",
         `다운로드 일자: ${today}`,
         "",
-        "이 프로그램은 James W. Pennebaker와 John F. Evans의 표현적 글쓰기(expressive writing) 접근을 웹 환경으로 구현한 자기성찰 글쓰기 도구입니다..",
+        "이 프로그램은 Pennebaker의 표현적 글쓰기 연구를 바탕으로 웹 환경에서 사용할 수 있도록 재구성되었습니다.",
         "구성 및 웹 구현: 최규하",
         "",
         "==============================",
@@ -254,9 +254,22 @@ export default function ExpressiveWritingApp() {
           reflectionNotes[day.day]?.trim() || "작성된 메모가 없습니다.",
           ""
         ])
-      ].join("
-")
+      ].join("\n")
     };
+  };
+
+  const downloadRecords = () => {
+    const { today, text } = buildRecordContent();
+    const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = `expressive-writing-records-${today}.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   const downloadPdf = () => {
