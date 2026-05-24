@@ -217,6 +217,120 @@ export default function ExpressiveWritingApp() {
     return responses[day]?.[questionIndex] ?? "-";
   };
 
+  const buildRecordContent = () => {
+    const today = new Date().toISOString().slice(0, 10);
+
+    return {
+      today,
+      text: [
+        "4일 표현적 글쓰기 기록",
+        `다운로드 일자: ${today}`,
+        "",
+        "이 프로그램은 James W. Pennebaker와 John F. Evans의 표현적 글쓰기(expressive writing) 접근을 웹 환경으로 구현한 자기성찰 글쓰기 도구입니다..",
+        "구성 및 웹 구현: 최규하",
+        "",
+        "==============================",
+        "전체 요약",
+        "==============================",
+        `작성한 일차: ${getCompletedWritingDays()} / 4`,
+        `총 글자 수: ${getTotalCharacters().toLocaleString()} 자`,
+        "",
+        ...days.flatMap((day) => [
+          "==============================",
+          `Day ${day.day} · ${day.title}`,
+          `초점: ${day.focus}`,
+          "==============================",
+          "",
+          "[글쓰기 내용]",
+          writingTexts[day.day]?.trim() || "작성된 글이 없습니다.",
+          "",
+          "[자기평가]",
+          `1. 깊은 생각과 감정 표현 정도: ${getScore(day.day, 0)}`,
+          `2. 슬픔·분노·불안 정도: ${getScore(day.day, 1)}`,
+          `3. 안도감·해방감·평온함 정도: ${getScore(day.day, 2)}`,
+          `4. 의미 있는 경험 정도: ${getScore(day.day, 3)}`,
+          "",
+          "[자유서술 메모]",
+          reflectionNotes[day.day]?.trim() || "작성된 메모가 없습니다.",
+          ""
+        ])
+      ].join("
+")
+    };
+  };
+
+  const downloadRecords = () => {
+    const { today, text } = buildRecordContent();
+    const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = `expressive-writing-records-${today}.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  const downloadPdf = () => {
+    const { today, text } = buildRecordContent();
+    const printableText = text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/
+/g, "<br />");
+
+    const printWindow = window.open("", "_blank");
+    if (!printWindow) {
+      alert("팝업이 차단되었습니다. 팝업 허용 후 다시 시도해 주세요.");
+      return;
+    }
+
+    printWindow.document.write(`
+      <!doctype html>
+      <html lang="ko">
+        <head>
+          <meta charset="utf-8" />
+          <title>4일 표현적 글쓰기 기록 ${today}</title>
+          <style>
+            body {
+              font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+              line-height: 1.75;
+              color: #292524;
+              padding: 40px;
+              max-width: 860px;
+              margin: 0 auto;
+            }
+            h1 {
+              font-size: 28px;
+              margin-bottom: 24px;
+            }
+            .content {
+              white-space: normal;
+              font-size: 14px;
+            }
+            @media print {
+              body { padding: 24px; }
+            }
+          </style>
+        </head>
+        <body>
+          <h1>4일 표현적 글쓰기 기록</h1>
+          <div class="content">${printableText}</div>
+          <script>
+            window.onload = function() {
+              window.print();
+            };
+          </script>
+        </body>
+      </html>
+    `);
+
+    printWindow.document.close();
+  };
+
   return (
     <div className="min-h-screen bg-stone-100 text-stone-800 flex items-center justify-center p-6">
       <div className="w-full max-w-5xl">
@@ -289,7 +403,7 @@ export default function ExpressiveWritingApp() {
 
             <div className="bg-stone-50 rounded-2xl p-5 border border-stone-200 mb-8 text-sm text-stone-500 leading-relaxed">
               <p className="mb-2">
-                이 프로그램은 James W. Pennebaker와 John F. Evans의 표현적 글쓰기(expressive writing) 접근을 웹 환경으로 구현한 자기성찰 글쓰기 도구입니다.
+                이 프로그램은 Pennebaker의 표현적 글쓰기 연구를 바탕으로 웹 환경에서 사용할 수 있도록 재구성되었습니다.
               </p>
               <p>구성 및 웹 구현: 최규하</p>
             </div>
@@ -588,10 +702,24 @@ export default function ExpressiveWritingApp() {
               </div>
             </div>
 
-            <div className="flex justify-end pt-10">
-              <button className="px-8 py-4 rounded-2xl bg-stone-900 text-white text-lg hover:bg-stone-700 transition">
-                기록 다운로드
+            <div className="flex flex-wrap justify-between gap-3 pt-10">
+              <button
+                onClick={resetAllData}
+                className="px-6 py-4 rounded-2xl bg-stone-100 text-stone-600 text-lg hover:bg-stone-200 transition"
+              >
+                기록 초기화
               </button>
+
+              <div className="flex flex-wrap gap-3">
+                
+
+                <button
+                  onClick={downloadPdf}
+                  className="px-8 py-4 rounded-2xl bg-stone-900 text-white text-lg hover:bg-stone-700 transition"
+                >
+                  PDF 다운로드
+                </button>
+              </div>
             </div>
           </div>
         )}
