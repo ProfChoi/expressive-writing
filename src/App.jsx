@@ -289,7 +289,7 @@ export default function ExpressiveWritingApp() {
 
             <div className="bg-stone-50 rounded-2xl p-5 border border-stone-200 mb-8 text-sm text-stone-500 leading-relaxed">
               <p className="mb-2">
-                이 프로그램은 James W. Pennebaker와 John F. Evans의 표현적 글쓰기(expressive writing) 접근을 바탕으로 웹 환경으로 구현한 자기성찰 글쓰기 도구입니다.
+                이 프로그램은 James W. Pennebaker와 John F. Evans의 표현적 글쓰기(expressive writing) 접근을 웹 환경으로 구현한 자기성찰 글쓰기 도구입니다.
               </p>
               <p>구성 및 웹 구현: 최규하</p>
             </div>
