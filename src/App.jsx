@@ -140,7 +140,12 @@ export default function ExpressiveWritingApp() {
 
   const goBack = () => {
     if (screen === "dayIntro") {
-      setScreen("intro");
+      if (currentDay > 1) {
+        setCurrentDay((prev) => prev - 1);
+        setScreen("writing");
+      } else {
+        setScreen("intro");
+      }
     } else if (screen === "writing") {
       setScreen("dayIntro");
     } else if (screen === "pause") {
@@ -156,7 +161,7 @@ export default function ExpressiveWritingApp() {
     <button
       onClick={goBack}
       aria-label="이전 화면으로 돌아가기"
-      className="mb-6 inline-flex items-center gap-2 rounded-full border border-stone-300 px-4 py-2 text-stone-600 hover:bg-stone-100 transition"
+      className="mb-6 inline-flex w-auto items-center gap-2 rounded-full border border-stone-300 px-5 py-2 text-stone-600 hover:bg-stone-100 transition self-start"
     >
       <span className="text-xl leading-none">←</span>
       <span className="text-sm">이전</span>
@@ -268,6 +273,13 @@ export default function ExpressiveWritingApp() {
               <p className="text-sm text-stone-500 leading-relaxed">
                 같은 PC와 같은 브라우저로 다시 접속하면 이전 진행 상태와 작성 내용이 자동으로 복원됩니다.
               </p>
+            </div>
+
+            <div className="bg-stone-50 rounded-2xl p-5 border border-stone-200 mb-8 text-sm text-stone-500 leading-relaxed">
+              <p className="mb-2">
+                이 프로그램은 James W. Pennebaker와 John F. Evans의 표현적 글쓰기(expressive writing) 접근을 바탕으로 웹 환경에 맞게 재구성한 자기성찰 글쓰기 도구입니다.
+              </p>
+              <p>구성 및 웹 구현: 최규하</p>
             </div>
 
             <div className="flex flex-wrap justify-between gap-3">
