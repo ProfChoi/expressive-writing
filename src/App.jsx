@@ -205,6 +205,18 @@ export default function ExpressiveWritingApp() {
     setLastSavedAt("");
   };
 
+  const getTotalCharacters = () => {
+    return Object.values(writingTexts).reduce((total, text) => total + (text?.length || 0), 0);
+  };
+
+  const getCompletedWritingDays = () => {
+    return days.filter((day) => (writingTexts[day.day] || "").trim().length > 0).length;
+  };
+
+  const getScore = (day, questionIndex) => {
+    return responses[day]?.[questionIndex] ?? "-";
+  };
+
   return (
     <div className="min-h-screen bg-stone-100 text-stone-800 flex items-center justify-center p-6">
       <div className="w-full max-w-5xl">
@@ -277,7 +289,7 @@ export default function ExpressiveWritingApp() {
 
             <div className="bg-stone-50 rounded-2xl p-5 border border-stone-200 mb-8 text-sm text-stone-500 leading-relaxed">
               <p className="mb-2">
-                이 프로그램은 James W. Pennebaker와 John F. Evans의 표현적 글쓰기(expressive writing) 접근을 바탕으로 웹 환경에 맞게 재구성한 자기성찰 글쓰기 도구입니다.
+                이 프로그램은 James W. Pennebaker와 John F. Evans의 표현적 글쓰기(expressive writing) 접근을 바탕으로 웹 환경으로 구현한 자기성찰 글쓰기 도구입니다.
               </p>
               <p>구성 및 웹 구현: 최규하</p>
             </div>
@@ -512,8 +524,19 @@ export default function ExpressiveWritingApp() {
               <div className="grid md:grid-cols-2 gap-6 mb-10">
                 <div className="bg-stone-50 rounded-3xl p-6 border border-stone-200">
                   <h3 className="text-xl font-semibold mb-4">감정 변화 흐름</h3>
-                  <div className="h-48 rounded-2xl border border-dashed border-stone-300 flex items-center justify-center text-stone-400">
-                    그래프 영역
+
+                  <div className="space-y-4">
+                    {days.map((day) => (
+                      <div key={day.day} className="rounded-2xl bg-white border border-stone-200 p-4">
+                        <div className="font-semibold mb-3">Day {day.day}</div>
+                        <div className="grid grid-cols-2 gap-3 text-sm text-stone-600">
+                          <div>표현 정도: {getScore(day.day, 0)}</div>
+                          <div>슬픔·분노·불안: {getScore(day.day, 1)}</div>
+                          <div>안도·평온: {getScore(day.day, 2)}</div>
+                          <div>의미 경험: {getScore(day.day, 3)}</div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
 
@@ -521,18 +544,42 @@ export default function ExpressiveWritingApp() {
                   <h3 className="text-xl font-semibold mb-4">글쓰기 통계</h3>
                   <div className="space-y-4 text-lg text-stone-700">
                     <div className="flex justify-between">
-                      <span>완료한 일차</span>
-                      <span>4 / 4</span>
+                      <span>작성한 일차</span>
+                      <span>{getCompletedWritingDays()} / 4</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>총 작성 시간</span>
+                      <span>총 권장 시간</span>
                       <span>80분</span>
                     </div>
                     <div className="flex justify-between">
                       <span>총 글자 수</span>
-                      <span>0 자</span>
+                      <span>{getTotalCharacters().toLocaleString()} 자</span>
                     </div>
                   </div>
+
+                  <div className="mt-8 space-y-3">
+                    <h4 className="font-semibold text-stone-800">Day별 글자 수</h4>
+                    {days.map((day) => (
+                      <div key={day.day} className="flex justify-between text-stone-600">
+                        <span>Day {day.day}</span>
+                        <span>{(writingTexts[day.day]?.length || 0).toLocaleString()} 자</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-stone-50 rounded-3xl p-8 border border-stone-200 mb-10">
+                <h3 className="text-xl font-semibold mb-5">마지막 자기성찰 메모</h3>
+                <div className="space-y-4">
+                  {days.map((day) => (
+                    <div key={day.day} className="rounded-2xl bg-white border border-stone-200 p-4">
+                      <div className="font-semibold mb-2">Day {day.day}</div>
+                      <p className="text-stone-600 leading-relaxed whitespace-pre-wrap">
+                        {reflectionNotes[day.day]?.trim() || "아직 작성된 메모가 없습니다."}
+                      </p>
+                    </div>
+                  ))}
                 </div>
               </div>
 
