@@ -209,7 +209,7 @@ export default function ExpressiveWritingApp() {
       "4일 표현적 글쓰기 기록",
       `다운로드 일자: ${today}`,
       "",
-      "이 프로그램은 Pennebaker의 표현적 글쓰기 연구를 바탕으로 웹 환경에서 사용할 수 있도록 재구성되었습니다.",
+      "이 프로그램은 James W. Pennebaker와 John F. Evans의 표현적 글쓰기(expressive writing) 접근을 웹 환경에서 구현한 자기성찰 글쓰기 도구입니다..",
       "구성 및 웹 구현: 최규하",
       "",
       "==============================",
