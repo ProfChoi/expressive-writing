@@ -256,8 +256,7 @@ export default function ExpressiveWritingApp() {
 
   const downloadPdf = () => {
     const { today, text } = buildRecordLines();
-    const printableText = escapeHtml(text).replaceAll("
-", "<br />");
+    const printableText = escapeHtml(text).replaceAll("\n", "<br />");
     const printWindow = window.open("", "_blank");
 
     if (!printWindow) {
