@@ -259,20 +259,6 @@ export default function ExpressiveWritingApp() {
     };
   };
 
-  const downloadRecords = () => {
-    const { today, text } = buildRecordContent();
-    const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-
-    link.href = url;
-    link.download = `expressive-writing-records-${today}.txt`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  };
-
   const downloadPdf = () => {
     const { today, text } = buildRecordContent();
     const printableText = text
