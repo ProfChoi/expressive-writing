@@ -40,4 +40,8 @@ jobs:
       id-token: write
 
     steps:
+<<<<<<< HEAD
       - uses: actions/deploy-pages@v4
+=======
+      - uses: actions/deploy-pages@v4
+>>>>>>> 647d82ad1436a38763c468050a69f7c94a82518b
